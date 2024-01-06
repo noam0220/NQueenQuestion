@@ -4,7 +4,7 @@ using System.Text;
 public class Program {
     //N=4 → 2, N=5 → 10, N=6 → 4, N=7 → 40, N=8 → 92
     //【問題】if文をまとめて、処理を高速化しよう。
-    //【問題】Nという変数を定義して汎用化しよう。
+    //【問題】Nという変数を定義して、汎用化しよう。
     //【問題】数の組み合わせを生成するとき、1行に2個以上クイーンが配置される組み合わせを生成しないようにしよう。
 
     static List<int[]> numberCombinationsList = new List<int[]>();  //N個の数の組み合わせリスト
