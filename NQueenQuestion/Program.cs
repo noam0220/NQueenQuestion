@@ -10,16 +10,11 @@ namespace NQueenQuestion {
     public class Program {
         //解の個数
         //N=4 → 2, N=5 → 10, N=6 → 4, N=7 → 40, N=8 → 92
-        //【問題A】Nという変数を定義して、汎用化しよう。
-        //【問題B】IsMatch()を簡略化して、処理を効率化しよう。
-        //【問題C】PrintSolution()を簡略化して、処理を効率化しよう。
-        //【問題?】if文をまとめて、処理を高速化しよう。
-        //【問題?】数の組み合わせを生成するとき、1行に2個以上クイーンが配置される組み合わせを生成しないようにしよう。
-        //【問題?】回転させたときに重複する組合わせの出力のON/OFF機能？(左右反転重複もある。)
-
-        //クイーンの個数(消すかも)
-        //const int N = 5;
-
+        //【問題1】Nという変数を定義して、汎用化しよう。
+        //【問題2】IsMatch()を簡略化して、処理を効率化しよう。
+        //【問題3】PrintSolution()を簡略化して、処理を効率化しよう。
+        //【問題4】回転させたとき、左右反転させたときに重複する組合わせを出力させないようにしよう。
+        
         //解のリスト
         static List<Solution> solutionList = new();
 
@@ -53,46 +48,18 @@ namespace NQueenQuestion {
         private static List<Solution> CreateAllCombinations() {
 
             var allCombs = new List<Solution>();
+            var disit = new int[5];
             var tmpPoints = new Point[5];
-            var nextX = new int[5];
 
-            for(var pindex = 1; pindex <= 5; pindex++) {
-
-                //一時的な座標の組み合わせを格納(X座標の初期値は1)
-                tmpPoints[pindex - 1] = new Point(1, pindex);
-                //右隣のX座標の値を格納(Nの右隣りのX座標は1とする)
-                nextX[pindex - 1] = pindex % 5;
-            }
-
-
-            for(var index = 1; index <= (int)Math.Pow(5, 5); index++) {
-
-                allCombs.Add(new Solution(tmpPoints.ToList()));
-
-                //次に追加する座標の組を生成する。
-                var tmpIndex = index;
-                var moveCount = 0;
-
-                //(検討中)
-                //特定の行のX座標を1つ右に移動する処理を行う。X座標がNの場合は、1に移動する。
-                //まずN行目の座標を移動し、その後はtmpIndexがNで割り切れる間、座標を移動する。
-                //moveCountが増える度に、移動対象が1行上に移動する。移動は最大N回しか行わない。
-                while(moveCount < 5) {
-
-                    //移動する行
-                    var movingRow = 5 - moveCount - 1;
-
-
-                    tmpPoints[movingRow].X = nextX[tmpPoints[movingRow].X - 1] + 1;
-                    moveCount++;
-
-
-                    if(tmpIndex % 5 != 0) {
-                        break;
-                    }
-                    tmpIndex /= 5;
+            for(var ii = 0; ii < (int)Math.Pow(5, 5); ++ii) {
+                for(var tmpRow = 1; tmpRow <= 5; tmpRow++) {
+                    disit[tmpRow - 1] = (ii / (int)Math.Pow(5, 5 - tmpRow) % 5) + 1;
+                    tmpPoints[tmpRow - 1].X = disit[tmpRow - 1];
+                    tmpPoints[tmpRow - 1].Y = tmpRow;
                 }
+                allCombs.Add(new Solution(tmpPoints.ToList()));
             }
+
             return allCombs;
         }
 
