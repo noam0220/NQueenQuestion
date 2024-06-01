@@ -14,7 +14,10 @@ namespace NQueenQuestion {
         //【問題2】IsMatch()を簡略化して、処理を効率化しよう。
         //【問題3】PrintSolution()を簡略化して、処理を効率化しよう。
         //【問題4】回転させたとき、左右反転させたときに重複する組合わせを出力させないようにしよう。
-        
+
+        //クイーンの個数
+        //const int N = 5;
+
         //解のリスト
         static List<Solution> solutionList = new();
 
@@ -51,9 +54,15 @@ namespace NQueenQuestion {
             var disit = new int[5];
             var tmpPoints = new Point[5];
 
+            //iiを5進法で表し、その数に応じて各座標のY座標の値を設定する。
             for(var ii = 0; ii < (int)Math.Pow(5, 5); ++ii) {
                 for(var tmpRow = 1; tmpRow <= 5; tmpRow++) {
-                    disit[tmpRow - 1] = (ii / (int)Math.Pow(5, 5 - tmpRow) % 5) + 1;
+
+                    //商を求める。
+                    var quotient = ii / (int)Math.Pow(5, 5 - tmpRow);
+                    disit[tmpRow - 1] = quotient % 5 + 1;
+
+                    //各行の座標を設定する。
                     tmpPoints[tmpRow - 1].X = disit[tmpRow - 1];
                     tmpPoints[tmpRow - 1].Y = tmpRow;
                 }
@@ -104,18 +113,12 @@ namespace NQueenQuestion {
 
                 for (var tmpRow = 1; tmpRow < 5 + 1; tmpRow++){
                     for (var tmpCol = 1; tmpCol < 5 + 1; tmpCol++) {
-                        var existFlg = false;
-                        foreach (var point in solution.Points){
-                            if (point.Y == tmpRow && point.X == tmpCol){
-                                existFlg = true;
-                                break;
-                            }
-                        }
-                        if(existFlg){
+
+                        //solutionの座標の中に、(tmpRow, tmpCol)が存在していたら'□'を'■'に変更する。
+                        if(ExistPoint(solution, tmpRow, tmpCol)){
                             var target = (tmpRow - 1) * 5 + tmpCol - 1;
                             sbSolution.Remove(target, 1).Insert(target, '■');
                         }
-                        existFlg = false;
                     }
                 }
 
@@ -134,5 +137,17 @@ namespace NQueenQuestion {
 
             Console.WriteLine(sbAllSolutions);
         }
+
+        //solの座標の中に、特定の座標が存在するかどうかを判定する。
+        private static bool ExistPoint(Solution sol, int tRow, int tCol) {
+            var existFlg = false;
+            foreach(var point in sol.Points) {
+                if(point.Y == tRow && point.X == tCol) {
+                    existFlg = true;
+                    break;
+                }
+            }
+            return existFlg;
+        } 
     }
 }
